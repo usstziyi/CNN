@@ -6,7 +6,7 @@ import torch.nn as nn
 
 
 class Conv2D_Manual(nn.Module):
-    def __init__(self, out_channels, in_channels, kernel_height, kernel_width):
+    def __init__(self, in_channels, out_channels, kernel_height, kernel_width):
         super().__init__()
         # 卷积核(K, C, Hk, Wk)
         self.weight = nn.Parameter(torch.randn(out_channels, in_channels, kernel_height, kernel_width))

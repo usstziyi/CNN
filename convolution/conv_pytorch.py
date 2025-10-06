@@ -7,7 +7,7 @@ import torch.nn.functional as F
 
 
 class Conv2D_Pytorch(nn.Module):
-    def __init__(self, out_channels, in_channels, kernel_height, kernel_width):
+    def __init__(self, in_channels, out_channels, kernel_height, kernel_width):
         super().__init__()
         # 卷积核(K, C, Hk, Wk)
         self.weight = nn.Parameter(torch.randn(out_channels, in_channels, kernel_height, kernel_width))

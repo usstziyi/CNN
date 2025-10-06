@@ -3,8 +3,8 @@ import torch
 
 def main():
     conv = Conv2D_Manual(
-        out_channels=4,  # K
         in_channels=3,   # C
+        out_channels=4,  # K
         kernel_height=3, # Hk
         kernel_width=3   # Wk
     )

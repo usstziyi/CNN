@@ -1,8 +1,8 @@
-from convolution import Conv2D_Pytorch
+from convolution import Conv2D_Model
 import torch
 
 def main():
-    conv = Conv2D_Pytorch(
+    conv = Conv2D_Model(
         in_channels=3,   # C
         out_channels=4,  # K
         kernel_height=3, # Hk
@@ -12,10 +12,6 @@ def main():
     # x(B,C,Hi,Wi)=(2,3,10,10)
     x = torch.randn(2, 3, 10, 10)
 
-    # kernal(K,C,Hk,Wk)=(4,3,3,3)
-    print(conv.weight.shape)
-    # bias(K)=(4,)
-    print(conv.bias.shape)
     # out(B,K,Ho,Wo)=(2,4,8,8)
     print(conv(x).shape)
 
