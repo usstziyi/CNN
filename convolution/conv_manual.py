@@ -6,13 +6,20 @@ import torch.nn as nn
 
 
 class Conv2D_Manual(nn.Module):
-    def __init__(self, in_channels, out_channels, kernel_height, kernel_width):
+    def __init__(self, out_channels, in_channels, kernel_height, kernel_width):
         super().__init__()
+        # 卷积核(K, C, Hk, Wk)
         self.weight = nn.Parameter(torch.randn(out_channels, in_channels, kernel_height, kernel_width))
+        # 偏置(K,)
         self.bias = nn.Parameter(torch.zeros(out_channels))
 
     def forward(self, x):
-        return corr2d_multi(x, self.weight) + self.bias
+        # x(B,C,Hi,Wi)=(2,3,10,10)
+        # kernal(K,C,Hk,Wk)=(4,3,3,3)
+        # conv2d(B,K,Ho,Wo)=(2,4,8,8)
+        # bias(K,)->(1,K,1,1)->(B,K,Ho,Wo)=(2,4,8,8)
+        # return(B,K,Ho,Wo)=(2,4,8,8)
+        return corr2d_multi(x, self.weight) + self.bias.view(1, -1, 1, 1) 
 
 
 # x     (B,  C,  Hi,  Wi)
@@ -28,7 +35,7 @@ def corr2d_multi(x, kernal):
     # C: 通道数
     # Hk: 卷积核高度    
     # Wk: 卷积核宽度
-    K, _, Hk, Wk = kernal.shape 
+    K, _, Hk, Wk = kernal.shape
     Ho = H - Hk + 1
     Wo = W - Wk + 1
     out = torch.zeros(B, K, Ho, Wo, device=x.device)
