@@ -2,22 +2,19 @@ import torch
 from torch import nn
 from d2l import torch as d2l
 from net.lenet import LeNet
+from common import try_gpu
 
-
-def try_gpu():
-    """检测可用设备：GPU、MPS或CPU"""
-    if torch.cuda.is_available():
-        return torch.device('cuda')
-    elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
-        return torch.device('mps')
-    else:
-        return torch.device('cpu')
 
 
 
 # 训练LeNet模型
 def train_lenet(model, train_loader, device, num_epochs=10):
     # 初始化模型权重，使用Xavier均匀分布初始化，确保每个层的权重在训练开始时都有一个合理的初始值，
+    # 这有助于加速模型的收敛。
+    # sigmoid作为激活函数的缺点：
+    # 1. 梯度消失问题：sigmoid函数在输入值很大或很小时，梯度接近于0，这会导致在反向传播过程中，梯度值被显著减少，从而使得模型训练变得困难。
+    # 2. 输出不是零均值：sigmoid函数的输出范围是(0, 1)，而不是像ReLU函数那样的(-1, 1)。这意味着输出的均值不是0，这在某些情况下可能会影响模型的训练。
+    # 所以这里初始化权重时，使用Xavier均匀分布初始化，确保每个层的权重在训练开始时都有一个合理的初始值，
     # 这有助于加速模型的收敛。
     def init_weights(m):
         if type(m) == nn.Linear or type(m) == nn.Conv2d:
@@ -33,9 +30,9 @@ def train_lenet(model, train_loader, device, num_epochs=10):
         for images, labels in train_loader:
             images, labels = images.to(device), labels.to(device)
             outputs = model(images)
-            loss = criterion(outputs, labels)
+            loss = criterion(outputs, labels) # 每个batch的平均损失
             optimizer.zero_grad()
-            loss.backward() # 每个
+            loss.backward() # 每个batch的梯度
             optimizer.step()
             with torch.no_grad():
                 running_loss += loss.item()
