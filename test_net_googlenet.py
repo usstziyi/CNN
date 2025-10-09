@@ -54,6 +54,7 @@ def evaluate_alexnet(model, test_iter, device):
 
 def main():
     # 超参数
+    batch_size = 128
     num_epochs = 10
     lr = 0.1
 
@@ -61,7 +62,7 @@ def main():
     device = try_gpu()
 
     # 数据集
-    train_iter, test_iter = d2l.load_data_fashion_mnist(batch_size=128,resize=224)
+    train_iter, test_iter = d2l.load_data_fashion_mnist(batch_size,resize=96)
     num_classes = 10
     in_channels = 1
     
