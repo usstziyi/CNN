@@ -1,6 +1,8 @@
 import torch.nn as nn
 import torch
 
+# 卷积层输出输出由四维张量组成（B批量大小、Co输出通道数、H高度、W宽度）
+
 class Conv2D_Model(nn.Module):
     def __init__(self, in_channels, out_channels, kernel_size):
         super().__init__()
