@@ -21,7 +21,7 @@ def train_lenet(model, train_loader, device, num_epochs=10):
     model.apply(init_weights)
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.9)
+    optimizer = torch.optim.SGD(model.parameters(), lr=1)
     
     for epoch in range(num_epochs):
         model.train()
