@@ -10,7 +10,7 @@ from common import try_gpu
 def train_alexnet(model, train_iter, device, num_epochs=10):
     """训练AlexNet模型"""
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.9)
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
     
     for epoch in range(num_epochs):
         model.train()
