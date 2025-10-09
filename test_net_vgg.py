@@ -1,17 +1,16 @@
-from net import AlexNet
-import torch
+from net import VGG_11
 from torch import nn
+import torch
 from d2l import torch as d2l
 from common import try_gpu, display_model
 
 
-
-
-def train_alexnet(model, train_iter, device, num_epochs=10):
-    """训练AlexNet模型"""
+def train_vgg(model, train_iter, device, num_epochs):
+    # 损失函数
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=0.01)
-    
+    # 优化器
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.05)
+    # 训练模型
     for epoch in range(num_epochs):
         model.train()
         running_loss = 0.0
@@ -33,8 +32,9 @@ def train_alexnet(model, train_iter, device, num_epochs=10):
         # running_loss/len(train_iter): 每个epoch的平均损失
  
 
-def evaluate_alexnet(model, test_iter, device):
-    """评估AlexNet模型"""
+
+def evaluate_vgg(model, test_iter, device):
+    # 评估模型
     model.eval()
     with torch.no_grad():
         correct = 0
@@ -53,25 +53,35 @@ def main():
     batch_size = 256
     num_epochs = 10 
 
+   
+
     # 获取可用设备
     device = try_gpu()
     print(f"Using device: {device}")
-    
     # 加载数据集,此处使用fashion_mnist数据集模拟ResNet-18的输入尺寸224x224
-    train_iter,test_iter = d2l.load_data_fashion_mnist(batch_size=batch_size,resize=224)
- 
-    # 创建AlexNet模型并移动到设备
-    model = AlexNet().to(device)
+    train_iter, test_iter = d2l.load_data_fashion_mnist(batch_size, resize=224)
+    # 初始化模型: VGG-11
+    # 每个VGG块(卷积层数, 输出通道数)
+    conv_arch = ((1, 64), (1, 128), (2, 256), (2, 512), (2, 512))
+    model = VGG_11(conv_arch).to(device)
+
 
     # 打印模型参数数量
     display_model(model)
 
     # 训练模型
-    train_alexnet(model, train_iter, device, num_epochs)
-
+    train_vgg(model, train_iter, device, num_epochs)
     # 评估模型
-    evaluate_alexnet(model, test_iter, device)
- 
+    # evaluate_vgg(model, test_iter, device)
 
-if __name__ == '__main__':
+    #  # 可视化预测结果
+    # sample_image, sample_label = next(iter(test_iter))
+    # sample_image, sample_label = sample_image.to(device), sample_label.to(device)
+    # model.eval()
+    # with torch.no_grad():
+    #     output = model(sample_image)
+    #     _, predicted = torch.max(output, 1)
+    # d2l.show_images([sample_image.cpu().squeeze(0)], titles=[f"Predicted: {predicted.item()}"])
+
+if __name__ == "__main__":
     main()

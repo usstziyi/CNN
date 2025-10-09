@@ -2,8 +2,7 @@ import torch
 from torch import nn
 from d2l import torch as d2l
 from net.lenet import LeNet
-from common import try_gpu
-
+from common import try_gpu, display_model
 
 
 
@@ -71,6 +70,9 @@ def main():
 
     # 创建LeNet模型并移动到设备
     model = LeNet().to(device)
+
+    # 打印模型参数数量
+    display_model(model)
 
     # 训练模型
     train_lenet(model, train_iter, device, num_epochs=10)

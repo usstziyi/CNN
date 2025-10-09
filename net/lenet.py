@@ -17,9 +17,11 @@ class LeNet(nn.Module):
             nn.Sigmoid(),
             # 第二个池化层(池化核大小=2, 步长=2)
             nn.AvgPool2d(kernel_size=2, stride=2),
-            # 展平层
-            nn.Flatten()
         )
+
+        # 展平层
+        self.flatten = nn.Flatten()
+
         # 分类层
         self.classifier = nn.Sequential(
             # 第一个全连接层(输入特征数=16*5*5, 输出特征数=120)
@@ -35,6 +37,8 @@ class LeNet(nn.Module):
     def forward(self, x):
         # 特征提取
         x = self.features(x)
+        # 展平
+        x = self.flatten(x)
         # 分类
         x = self.classifier(x)
         return x
