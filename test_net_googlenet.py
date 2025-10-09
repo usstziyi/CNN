@@ -55,7 +55,7 @@ def evaluate_alexnet(model, test_iter, device):
 def main():
     # 超参数
     num_epochs = 10
-    lr = 0.001
+    lr = 0.1
 
     # 设备
     device = try_gpu()
