@@ -1,11 +1,12 @@
-from net import GoogLeNet
+from net import DenseNet
 from torch import nn
 import torch
-from common import display_model,try_gpu
 from d2l import torch as d2l
+from common import try_gpu, display_model
 
-def train_googlenet(model, train_iter, device, lr, num_epochs=10):
-    """训练GoogLeNet模型"""
+
+def train_densenet(model, train_iter, device, lr, num_epochs=10):
+    """训练DenseNet模型"""
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=lr)
 
@@ -36,8 +37,8 @@ def train_googlenet(model, train_iter, device, lr, num_epochs=10):
         # running_loss/len(train_iter): 每个epoch的平均损失
  
 
-def evaluate_googlenet(model, test_iter, device):
-    """评估GoogLeNet模型"""
+def evaluate_densenet(model, test_iter, device):
+    """评估DenseNet模型"""
     model.eval()
     with torch.no_grad():
         correct = 0
@@ -52,40 +53,33 @@ def evaluate_googlenet(model, test_iter, device):
         print(f"Test Accuracy: {100 * correct / total:.2f}%")
 
 
+
 def main():
     # 超参数
-    batch_size = 128
     num_epochs = 10
+    batch_size = 256
     lr = 0.1
 
-    # 设备
+    # 获取可用设备
     device = try_gpu()
-
-    # 数据集
-    train_iter, test_iter = d2l.load_data_fashion_mnist(batch_size,resize=96)
-    num_classes = 10
-    in_channels = 1
+    print(f"Using device: {device}")
     
-    # 模型
-    model = GoogLeNet(
-        in_channels=in_channels, 
-        num_classes=num_classes
-        ).to(device)
+    # 加载数据集
+    batch_size = 256
+    train_iter,test_iter = d2l.load_data_fashion_mnist(batch_size, resize=96)
+
+    # 创建DenseNet模型并移动到设备
+    output_channels = 10
+    growth_rate = 32
+    model = DenseNet(output_channels, growth_rate).to(device)
     display_model(model)
 
-    # 训练
-    train_googlenet(model, train_iter, device, lr, num_epochs)
+    # 训练模型
+    train_densenet(model, train_iter, device, lr=lr, num_epochs=num_epochs)
 
-    # 评估
-    evaluate_googlenet(model, test_iter, device)
-
-
-
-
-
+    # 评估模型
+    evaluate_densenet(model, test_iter, device)
 
 
 if __name__ == '__main__':
     main()
-
-

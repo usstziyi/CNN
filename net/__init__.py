@@ -4,6 +4,7 @@ from .vgg import VGG_11
 from .nin import NIN
 from .goolenet import GoogLeNet
 from .resnet import ResNet_18
+from .densenet import DenseNet
 
 
 
@@ -16,5 +17,6 @@ __all__ = [
     'VGG_11',
     'NIN',
     'GoogLeNet',
-    'ResNet_18'
+    'ResNet_18',
+    'DenseNet'
 ]
